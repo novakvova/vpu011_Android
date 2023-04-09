@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebShopApi.Data;
+using WebShopApi.Data.Entities;
+using WebShopApi.Helpers;
 using WebShopApi.Models;
 
 namespace WebShopApi.Controllers
@@ -29,6 +31,23 @@ namespace WebShopApi.Controllers
                 .Select(x=>_mapper.Map<CategoryItemViewModel>(x))
                 .ToListAsync();
             return Ok(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CategoryCreateItemVM model)
+        {
+            try
+            {
+                var category = _mapper.Map<CategoryEntity>(model);
+                category.Image = ImageWorker.SaveImage(model.ImageBase64);
+                await _appEFContext.Categories.AddAsync(category);
+                await _appEFContext.SaveChangesAsync();
+                return Ok(_mapper.Map<CategoryItemViewModel>(category));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error=ex.Message });
+            }
         }
     }
 }
