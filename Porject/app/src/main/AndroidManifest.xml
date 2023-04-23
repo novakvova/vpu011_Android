@@ -17,6 +17,12 @@
         android:theme="@style/Theme.Myshop"
         tools:targetApi="31">
         <activity
+            android:name=".ChangeImageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".catalog.CategoryCreateActivity"
+            android:exported="false" />
+        <activity
             android:name=".catalog.CatalogActivity"
             android:exported="false" />
         <activity

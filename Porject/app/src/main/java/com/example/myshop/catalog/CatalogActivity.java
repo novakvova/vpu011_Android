@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.example.myshop.BaseActivity;
 import com.example.myshop.R;
 import com.example.myshop.catalog.categorycard.CategoriesAdapter;
 import com.example.myshop.dto.category.CategoryItemDTO;
@@ -18,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends BaseActivity {
 
     CategoriesAdapter categoriesAdapter;
     private RecyclerView rcvCategories;
