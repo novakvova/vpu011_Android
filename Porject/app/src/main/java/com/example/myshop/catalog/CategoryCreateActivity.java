@@ -88,7 +88,7 @@ public class CategoryCreateActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         CommonUtils.hideLoading();
-                        Intent intent = new Intent(CategoryCreateActivity.this, MainActivity.class);
+                        Intent intent = new Intent(CategoryCreateActivity.this, CatalogActivity.class);
                         startActivity(intent);
                         finish();
                     }
