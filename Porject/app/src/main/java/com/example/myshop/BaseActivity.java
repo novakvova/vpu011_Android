@@ -9,9 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myshop.catalog.CatalogActivity;
 import com.example.myshop.catalog.CategoryCreateActivity;
+import com.example.myshop.utils.CommonUtils;
 
 public class BaseActivity extends AppCompatActivity {
 
+    public BaseActivity() {
+        CommonUtils.setContext(this);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

@@ -12,6 +12,7 @@ import com.example.myshop.R;
 import com.example.myshop.catalog.categorycard.CategoriesAdapter;
 import com.example.myshop.dto.category.CategoryItemDTO;
 import com.example.myshop.service.CategoryNetwork;
+import com.example.myshop.utils.CommonUtils;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class CatalogActivity extends BaseActivity {
     }
 
     private void requestServer() {
+        CommonUtils.showLoading();
         CategoryNetwork
                 .getInstance()
                 .getJSONApi()
@@ -46,9 +48,11 @@ public class CatalogActivity extends BaseActivity {
                         //CategoryItemDTO one = data.get(0);
                         categoriesAdapter = new CategoriesAdapter(data);
                         rcvCategories.setAdapter(categoriesAdapter);
+                        CommonUtils.hideLoading();
                     }
                     @Override
                     public void onFailure(Call<List<CategoryItemDTO>> call, Throwable t) {
+                        CommonUtils.hideLoading();
                     }
                 });
     }
