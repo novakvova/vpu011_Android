@@ -1,9 +1,9 @@
 package com.example.myshop.dto.category;
 
-public class CategoryItemDTO {
+public class CategoryUpdateDTO {
     private int id;
     private String name;
-    private String image;
+    private String imageBase64;
     private int priority;
     private String description;
 
@@ -23,12 +23,12 @@ public class CategoryItemDTO {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageBase64() {
+        return imageBase64;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
     public int getPriority() {

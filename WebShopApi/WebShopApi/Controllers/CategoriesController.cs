@@ -60,8 +60,11 @@ namespace WebShopApi.Controllers
                 cat.Name= model.Name;
                 cat.Description= model.Description;
                 cat.Priority = model.Priority;
-                ImageWorker.RemoveImage(cat.Image);
-                cat.Image = ImageWorker.SaveImage(model.ImageBase64);
+                if(!string.IsNullOrEmpty(model.ImageBase64))
+                {
+                    ImageWorker.RemoveImage(cat.Image);
+                    cat.Image = ImageWorker.SaveImage(model.ImageBase64);
+                }
                 _appEFContext.Update(cat);
                 _appEFContext.SaveChanges();
             }
@@ -79,6 +82,17 @@ namespace WebShopApi.Controllers
                 _appEFContext.SaveChanges();
                 return Ok();
             }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var category = await _appEFContext.Categories.FindAsync(id);
+            if (category is null)
+                return NotFound();
+
+            return Ok(_mapper.Map<CategoryItemViewModel>(category));
+
         }
     }
 }

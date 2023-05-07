@@ -1,11 +1,12 @@
 package com.example.myshop.catalog;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.myshop.BaseActivity;
 import com.example.myshop.R;
@@ -46,7 +47,9 @@ public class CatalogActivity extends BaseActivity {
                     public void onResponse(Call<List<CategoryItemDTO>> call, Response<List<CategoryItemDTO>> response) {
                         List<CategoryItemDTO> data = response.body();
                         //CategoryItemDTO one = data.get(0);
-                        categoriesAdapter = new CategoriesAdapter(data);
+                        categoriesAdapter = new CategoriesAdapter(data,
+                                CatalogActivity.this::onClickDeleteCategory,
+                                CatalogActivity.this::onClickEditCategory);
                         rcvCategories.setAdapter(categoriesAdapter);
                         CommonUtils.hideLoading();
                     }
@@ -55,5 +58,39 @@ public class CatalogActivity extends BaseActivity {
                         CommonUtils.hideLoading();
                     }
                 });
+    }
+
+    private void onClickDeleteCategory(CategoryItemDTO category) {
+        //Toast.makeText(this, "Видаляємо "+category.getId(), Toast.LENGTH_SHORT).show();
+        CommonUtils.showLoading();
+        CategoryNetwork
+                .getInstance()
+                .getJSONApi()
+                .delete(category.getId())
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Intent intent = new Intent(CatalogActivity.this, CatalogActivity.class);
+                        startActivity(intent);
+                        finish();
+                        CommonUtils.hideLoading();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        CommonUtils.hideLoading();
+                    }
+                });
+    }
+
+    private void onClickEditCategory(CategoryItemDTO category) {
+        //Toast.makeText(this, "Редагуємо "+ category.getId(), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(CatalogActivity.this, CategoryEditActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("id", category.getId());
+        intent.putExtras(b);
+        startActivity(intent);
+        finish();
     }
 }

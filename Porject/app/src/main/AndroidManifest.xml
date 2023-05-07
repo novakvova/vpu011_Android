@@ -20,6 +20,9 @@
             android:name=".ChangeImageActivity"
             android:exported="false" />
         <activity
+            android:name=".catalog.CategoryEditActivity"
+            android:exported="false" />
+        <activity
             android:name=".catalog.CategoryCreateActivity"
             android:exported="false" />
         <activity
