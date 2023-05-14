@@ -34,7 +34,7 @@ namespace WebShopApi.Controllers
                 return BadRequest();
             }
             var token = await _jwtTokenService.CreateToken(user);
-            return Ok(token);
+            return Ok(new { token } );
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserViewModel model)

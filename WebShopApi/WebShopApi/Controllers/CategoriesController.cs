@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebShopApi.Data;
 using WebShopApi.Data.Entities;
+using WebShopApi.Data.Entities.Identity;
 using WebShopApi.Helpers;
 using WebShopApi.Models;
 
@@ -11,20 +14,26 @@ namespace WebShopApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly AppEFContext _appEFContext;
+        private readonly UserManager<UserEntity> _userManager;
 
-        public CategoriesController(IMapper mapper, AppEFContext appEFContext)
+        public CategoriesController(IMapper mapper, AppEFContext appEFContext,
+            UserManager<UserEntity> userManager)
         {
             _mapper = mapper;
             _appEFContext = appEFContext;
+            _userManager = userManager;
         }
 
         [HttpGet("list")]
         public async Task<IActionResult> Get()
         {
+            string userName = User.Claims.First().Value;
+            var user = await _userManager.FindByEmailAsync(userName);
             var model = await _appEFContext.Categories
                 .Where(x=>x.isDelete == false)
                 .OrderBy(x=>x.Priority)
