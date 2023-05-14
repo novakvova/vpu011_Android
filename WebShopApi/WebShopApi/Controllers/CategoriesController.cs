@@ -36,6 +36,7 @@ namespace WebShopApi.Controllers
             var user = await _userManager.FindByEmailAsync(userName);
             var model = await _appEFContext.Categories
                 .Where(x=>x.isDelete == false)
+                .Where(x => x.UserId == user.Id)
                 .OrderBy(x=>x.Priority)
                 .Select(x=>_mapper.Map<CategoryItemViewModel>(x))
                 .ToListAsync();
@@ -47,8 +48,11 @@ namespace WebShopApi.Controllers
         {
             try
             {
+                string userName = User.Claims.First().Value;
+                var user = await _userManager.FindByEmailAsync(userName);
                 var category = _mapper.Map<CategoryEntity>(model);
                 category.Image = ImageWorker.SaveImage(model.ImageBase64);
+                category.UserId = user.Id;
                 await _appEFContext.Categories.AddAsync(category);
                 await _appEFContext.SaveChangesAsync();
                 return Ok(_mapper.Map<CategoryItemViewModel>(category));
@@ -61,7 +65,11 @@ namespace WebShopApi.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> Put([FromBody] CategoryUpdateeItemVM model)
         {
-            var cat = await _appEFContext.Categories.FindAsync(model.Id);
+            string userName = User.Claims.First().Value;
+            var user = await _userManager.FindByEmailAsync(userName);
+            var cat = await _appEFContext.Categories
+                .Where(x => x.UserId == user.Id)
+                .SingleOrDefaultAsync(x => x.Id == model.Id);
             if (cat == null)
                 return NotFound();
             else
@@ -82,7 +90,11 @@ namespace WebShopApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _appEFContext.Categories.FindAsync(id);
+            string userName = User.Claims.First().Value;
+            var user = await _userManager.FindByEmailAsync(userName);
+            var category = await _appEFContext.Categories
+                .Where(x => x.UserId == user.Id)
+                .SingleOrDefaultAsync(x => x.Id == id);
             if (category is null)
                 return NotFound();
             else
@@ -96,7 +108,11 @@ namespace WebShopApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var category = await _appEFContext.Categories.FindAsync(id);
+            string userName = User.Claims.First().Value;
+            var user = await _userManager.FindByEmailAsync(userName);
+            var category = await _appEFContext.Categories
+                .Where(x => x.UserId == user.Id)
+                .SingleOrDefaultAsync(x => x.Id == id);
             if (category is null)
                 return NotFound();
 
